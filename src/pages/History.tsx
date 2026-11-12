@@ -10,7 +10,7 @@ import { FaArrowLeft, FaCheckCircle, FaTimes } from 'react-icons/fa';
 
 export function History() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const { totalPoints, accuracy } = useProgress();
+  const { totalPoints, accuracy, isLoading: progressLoading } = useProgress();
   const navigate = useNavigate();
 
   const [attempts, setAttempts] = useState<Attempt[]>([]);
@@ -68,7 +68,7 @@ export function History() {
           <div className="text-6xl mb-4">😕</div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Gagal Memuat Riwayat</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
-          <button onClick={loadHistory} className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+          <button onClick={loadHistory} className="px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
             Coba Lagi
           </button>
         </div>
@@ -104,17 +104,29 @@ export function History() {
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-4 bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
               <div className="text-center">
-                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{formatPrice(totalPoints)}</p>
+                {progressLoading ? (
+                  <div className="h-8 w-20 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true" />
+                ) : (
+                  <p className="text-2xl font-bold text-orange-700 dark:text-orange-400">{formatPrice(totalPoints)}</p>
+                )}
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Poin</p>
               </div>
               <div className="w-px h-8 bg-gray-200 dark:bg-gray-600 mx-2" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">{accuracy}%</p>
+                {progressLoading ? (
+                  <div className="h-8 w-14 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true" />
+                ) : (
+                  <p className="text-2xl font-bold text-green-700 dark:text-green-400">{accuracy}%</p>
+                )}
                 <p className="text-sm text-gray-600 dark:text-gray-400">Akurasi</p>
               </div>
               <div className="w-px h-8 bg-gray-200 dark:bg-gray-600 mx-2" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{attempts.length}</p>
+                {progressLoading ? (
+                  <div className="h-8 w-12 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true" />
+                ) : (
+                  <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{attempts.length}</p>
+                )}
                 <p className="text-sm text-gray-600 dark:text-gray-400">Soal</p>
               </div>
             </div>
@@ -127,7 +139,7 @@ export function History() {
             <div className="text-6xl mb-4">📭</div>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Belum ada riwayat</h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">Mulai menjawab soal untuk melihat riwayat di sini.</p>
-            <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+            <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
               Ke Toko
             </Link>
           </div>
@@ -149,7 +161,7 @@ export function History() {
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${
                           isCorrect ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'
                         }`}>
-                          {isCorrect ? <FaCheckCircle className="text-green-600 dark:text-green-400 w-6 h-6" /> : <FaTimes className="text-red-600 dark:text-red-400 w-6 h-6" />}
+                          {isCorrect ? <FaCheckCircle className="text-green-700 dark:text-green-400 w-6 h-6" /> : <FaTimes className="text-red-600 dark:text-red-400 w-6 h-6" />}
                         </div>
                         <div>
                           <p className="font-semibold text-gray-900 dark:text-white">{attempt.item?.name || `Soal #${attempt.itemId}`}</p>
@@ -175,7 +187,7 @@ export function History() {
                         </div>
                         <div>
                           <p className="text-gray-500 dark:text-gray-400">Poin</p>
-                          <p className="font-bold text-orange-600 dark:text-orange-400">{formatPrice(attempt.pointsEarned)}</p>
+                          <p className="font-bold text-orange-700 dark:text-orange-400">{formatPrice(attempt.pointsEarned)}</p>
                         </div>
                         <div>
                           <p className="text-gray-500 dark:text-gray-400">Tanggal</p>

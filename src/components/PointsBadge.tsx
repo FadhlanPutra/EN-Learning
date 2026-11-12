@@ -14,7 +14,7 @@ export function PointsBadge({ points, size = 'md', showLabel = true }: PointsBad
   };
 
   return (
-    <span className={`inline-flex items-center gap-1 font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 rounded-full ${sizeClasses[size]}`}>
+    <span className={`inline-flex items-center gap-1 font-bold text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 rounded-full ${sizeClasses[size]}`}>
       {formatPrice(points)}
       {showLabel && <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Points</span>}
     </span>

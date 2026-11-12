@@ -27,7 +27,7 @@ export function ShortAnswerQuestion({ onSubmit, disabled, result }: ShortAnswerQ
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div>
         <label htmlFor="short-answer" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Jawaban Anda
@@ -38,11 +38,11 @@ export function ShortAnswerQuestion({ onSubmit, disabled, result }: ShortAnswerQ
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={disabled || submitted}
-          rows={3}
-          className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors resize-none ${
+          rows={2}
+          className={`w-full px-4 py-3 border-2 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors resize-none ${
             disabled || submitted
               ? 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 cursor-not-allowed'
-              : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
           } ${result ? (result.isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-red-500 bg-red-50 dark:bg-red-900/20') : ''}`}
           placeholder="Ketik jawaban Anda di sini..."
           aria-describedby={result ? 'result-message' : undefined}
@@ -55,9 +55,9 @@ export function ShortAnswerQuestion({ onSubmit, disabled, result }: ShortAnswerQ
       <button
         type="submit"
         disabled={!answer.trim() || disabled || submitted}
-        className="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:hover:bg-gray-300 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        className="w-full py-3 px-4 bg-orange-700 hover:bg-orange-800 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
       >
-        {submitted ? 'Dikirim' : 'Kirim Jawaban'}
+        {submitted ? 'Terkirim' : 'Kirim Jawaban'}
       </button>
 
       {result && (

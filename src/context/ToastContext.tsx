@@ -43,10 +43,10 @@ export function useToast() {
 
 function ToastContainer({ toasts, onHide }: { toasts: Toast[]; onHide: (id: string) => void }) {
   const typeStyles: Record<Toast['type'], string> = {
-    success: 'bg-green-500',
-    error: 'bg-red-500',
-    info: 'bg-blue-500',
-    warning: 'bg-amber-500',
+    success: 'bg-green-700',
+    error: 'bg-red-600',
+    info: 'bg-blue-600',
+    warning: 'bg-amber-700',
   };
 
   return (

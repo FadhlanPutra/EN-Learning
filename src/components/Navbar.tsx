@@ -8,8 +8,8 @@ import { useProgress } from '../context/ProgressContext';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
-  const { totalPoints } = useProgress();
+  const { isAuthenticated, logout, isLoading: authLoading } = useAuth();
+  const { totalPoints, isLoading: progressLoading } = useProgress();
 
   const navLinks = [
     { path: '/', label: 'Home', icon: () => <FaUsers className="w-5 h-5" /> },
@@ -34,7 +34,7 @@ export function Navbar() {
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 text-xl font-bold text-orange-600 dark:text-orange-400">
+          <Link to="/" className="flex items-center gap-2 text-xl font-bold text-orange-700">
             <span className="text-2xl">🏪</span>
             <span>Quiz Shop</span>
           </Link>
@@ -46,61 +46,74 @@ export function Navbar() {
                 to={link.path}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   location.pathname === link.path
-                    ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                    ? 'bg-orange-50 text-orange-700'
+                    : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 {link.icon()}
                 {link.label}
               </Link>
             ))}
-            
-            {isAuthenticated && (
+
+            {authLoading || progressLoading ? (
+              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+            ) : isAuthenticated ? (
               <div className="flex items-center gap-3 px-3 py-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                <span className="text-sm font-medium text-orange-700">
                   {formatPrice(totalPoints)}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">Points</span>
               </div>
-            )}
+            ) : null}
 
-            {authLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                }`}
-              >
-                {link.icon()}
-                {link.label}
-              </Link>
-            ))}
+            {authLoading ? (
+              <>
+                <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+                <div className="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+              </>
+            ) : (
+              <>
+                {authLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      location.pathname === link.path
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {link.icon()}
+                    {link.label}
+                  </Link>
+                ))}
 
-            {isAuthenticated && (
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
-              >
-                <FaSignOutAlt className="w-5 h-5" />
-                Logout
-              </button>
+                {isAuthenticated && (
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                  >
+                    <FaSignOutAlt className="w-5 h-5" />
+                    Logout
+                  </button>
+                )}
+              </>
             )}
           </div>
 
           <div className="md:hidden flex items-center gap-4">
-            {isAuthenticated && (
+            {authLoading || progressLoading ? (
+              <div className="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+            ) : isAuthenticated ? (
               <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                <span className="text-sm font-medium text-orange-700">
                   {formatPrice(totalPoints)}
                 </span>
               </div>
-            )}
+            ) : null}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+              className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
             >
@@ -119,20 +132,26 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
                     location.pathname === link.path
-                      ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'
-                      : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                      ? 'bg-orange-50 text-orange-700'
+                      : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
                   {link.icon()}
                   {link.label}
                 </Link>
               ))}
-              
-              {isAuthenticated && (
+
+              {authLoading ? (
+                <>
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+                </>
+              ) : isAuthenticated ? (
                 <>
                   <div className="px-3 py-2.5 bg-orange-50 dark:bg-orange-900/30 rounded-lg flex items-center gap-3">
-                    <FaTrophy className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                    <span className="text-base font-medium text-orange-600 dark:text-orange-400">
+                    <FaTrophy className="w-5 h-5 text-orange-700" />
+                    <span className="text-base font-medium text-orange-700">
                       {formatPrice(totalPoints)} Points
                     </span>
                   </div>
@@ -143,8 +162,8 @@ export function Navbar() {
                       onClick={() => setIsOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
                         location.pathname === link.path
-                          ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'
-                          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                          ? 'bg-orange-50 text-orange-700'
+                          : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
                       {link.icon()}
@@ -153,29 +172,29 @@ export function Navbar() {
                   ))}
                   <button
                     onClick={() => { handleLogout(); setIsOpen(false); }}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-100"
                   >
                     <FaSignOutAlt className="w-5 h-5" />
                     Logout
                   </button>
                 </>
+              ) : (
+                authLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
+                      location.pathname === link.path
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {link.icon()}
+                    {link.label}
+                  </Link>
+                ))
               )}
-              
-              {!isAuthenticated && authLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
-                    location.pathname === link.path
-                      ? 'bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'
-                      : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  {link.icon()}
-                  {link.label}
-                </Link>
-              ))}
             </div>
           </div>
         )}

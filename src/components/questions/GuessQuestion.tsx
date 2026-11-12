@@ -27,22 +27,20 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Clue */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
         <div className="flex items-start gap-3">
-          <span className="text-3xl flex-shrink-0 mt-1">💡</span>
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-200 mb-2">Clue</h3>
-            <p className="text-gray-700 dark:text-gray-300 text-lg whitespace-pre-wrap">{item.clue}</p>
+          <span className="text-2xl flex-shrink-0" aria-hidden="true">💡</span>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base font-semibold text-amber-800 dark:text-amber-200 mb-1">Petunjuk</h3>
+            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{item.clue}</p>
           </div>
         </div>
       </div>
 
-      {/* Answer input */}
       <div>
         <label htmlFor="guess-answer" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Your Guess
+          Tebakan Anda
         </label>
         <input
           id="guess-answer"
@@ -51,12 +49,12 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={disabled || submitted}
-          className={`w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors ${
+          className={`w-full px-4 py-3 border-2 rounded-lg text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors ${
             disabled || submitted
               ? 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600 cursor-not-allowed'
-              : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
           } ${result ? (result.isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-red-500 bg-red-50 dark:bg-red-900/20') : ''}`}
-          placeholder="Type your guess..."
+          placeholder="Ketik tebakan Anda..."
           autoComplete="off"
           autoCapitalize="none"
           spellCheck={false}
@@ -66,9 +64,9 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
       <button
         type="submit"
         disabled={!answer.trim() || disabled || submitted}
-        className="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:hover:bg-gray-300 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        className="w-full py-3 px-4 bg-orange-700 hover:bg-orange-800 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
       >
-        {submitted ? 'Submitted' : 'Submit Guess'}
+        {submitted ? 'Terkirim' : 'Kirim Tebakan'}
       </button>
 
       {result && (
@@ -79,11 +77,11 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{result.isCorrect ? '🎉' : '😔'}</span>
             <h4 className={`font-semibold ${result.isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
-              {result.isCorrect ? 'Correct!' : 'Incorrect'}
+              {result.isCorrect ? 'Benar!' : 'Salah'}
             </h4>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            The answer was: <strong>{result.correctAnswer}</strong>
+            Jawaban yang benar: <strong>{result.correctAnswer}</strong>
           </p>
         </div>
       )}

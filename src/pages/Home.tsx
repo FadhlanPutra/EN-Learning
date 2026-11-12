@@ -19,11 +19,11 @@ export function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-600 via-orange-700 to-amber-800 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-orange-700 via-orange-800 to-amber-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('/favicon.svg')] opacity-5" aria-hidden="true" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/20 backdrop-blur-sm mb-6">
               <span className="text-2xl">🏪</span>
               <span className="font-medium">Quiz Shop</span>
             </div>
@@ -40,14 +40,14 @@ export function Home() {
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-white/90 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
               >
                 <FaPlay className="w-5 h-5" />
                 Start Shopping
               </Link>
               <Link
                 to="/leaderboard"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700 backdrop-blur-sm"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-black/20 text-white font-semibold rounded-lg hover:bg-black/30 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700 backdrop-blur-sm"
               >
                 <FaTrophy className="w-5 h-5" />
                 View Leaderboard
@@ -57,14 +57,14 @@ export function Home() {
         </div>
         
         {/* Decorative elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-600 to-transparent" aria-hidden="true" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-700 to-transparent" aria-hidden="true" />
       </section>
 
       {/* Stats Bar */}
       <section className="-mt-16 mb-16 px-4 relative z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-            <FaUsers className="w-10 h-10 text-orange-600 dark:text-orange-400 mx-auto mb-3" />
+            <FaUsers className="w-10 h-10 text-orange-700 dark:text-orange-400 mx-auto mb-3" />
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Group Learning</h3>
             <p className="text-gray-600 dark:text-gray-400 mt-1">Designed for classroom group activities</p>
           </div>
@@ -74,7 +74,11 @@ export function Home() {
             <p className="text-gray-600 dark:text-gray-400 mt-1">Easy → Medium → Challenge</p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-            <PointsBadge points={isLoading ? 0 : totalPoints} size="lg" showLabel={false} />
+            {isLoading ? (
+              <div className="h-9 w-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" aria-hidden="true" />
+            ) : (
+              <PointsBadge points={totalPoints} size="lg" showLabel={false} />
+            )}
             <p className="text-gray-600 dark:text-gray-400 mt-1">Total Points Earned</p>
           </div>
         </div>
@@ -97,7 +101,7 @@ export function Home() {
             >
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-orange-600 dark:text-orange-400">{step.number}</span>
+                  <span className="text-2xl font-bold text-orange-700 dark:text-orange-400">{step.number}</span>
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{step.title}</h3>
@@ -154,7 +158,7 @@ export function Home() {
 
       {/* CTA */}
       <section className="py-20 px-4">
-        <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-orange-600 to-amber-700 rounded-2xl p-12 text-white">
+        <div className="max-w-3xl mx-auto text-center bg-gradient-to-r from-orange-700 to-amber-800 rounded-2xl p-12 text-white">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Ready to Start?</h2>
           <p className="text-lg text-white/90 mb-8">
             Gather your groups, login, and begin your English learning adventure!
@@ -162,14 +166,14 @@ export function Home() {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               to={isAuthenticated ? '/shop' : '/login'}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-white/90 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
             >
               <FaArrowRight className="w-5 h-5" />
               {isAuthenticated ? 'Go to Shop' : 'Login to Play'}
             </Link>
             <Link
               to="/leaderboard"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white/20 text-white font-semibold rounded-lg hover:bg-white/30 transition-colors backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-black/20 text-white font-semibold rounded-lg hover:bg-black/30 transition-colors backdrop-blur-sm"
             >
               <FaTrophy className="w-5 h-5" />
               View Rankings

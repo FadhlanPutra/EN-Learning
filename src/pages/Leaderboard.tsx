@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 export function Leaderboard() {
   const { user } = useAuth();
-  const { totalPoints } = useProgress();
+  const { totalPoints, isLoading: progressLoading } = useProgress();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,9 +38,9 @@ export function Leaderboard() {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <FaCrown className="text-amber-500 w-6 h-6" />;
+        return <FaCrown className="text-amber-600 w-6 h-6" />;
       case 2:
-        return <FaMedal className="text-gray-400 w-6 h-6" />;
+        return <FaMedal className="text-gray-500 w-6 h-6" />;
       case 3:
         return <FaTrophy className="text-amber-700 w-6 h-6" />;
       default:
@@ -70,7 +70,7 @@ export function Leaderboard() {
           <div className="text-6xl mb-4">😕</div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Failed to Load Leaderboard</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
-          <button onClick={loadLeaderboard} className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+          <button onClick={loadLeaderboard} className="px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
             Try Again
           </button>
         </div>
@@ -106,7 +106,7 @@ export function Leaderboard() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
-                  <FaUsers className="text-orange-600 dark:text-orange-400 w-6 h-6" />
+                  <FaUsers className="text-orange-700 dark:text-orange-400 w-6 h-6" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">{user.username}</p>
@@ -114,7 +114,11 @@ export function Leaderboard() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{formatPrice(totalPoints)}</p>
+                {progressLoading ? (
+                  <div className="h-8 w-24 ml-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true" />
+                ) : (
+                  <p className="text-2xl font-bold text-orange-700">{formatPrice(totalPoints)}</p>
+                )}
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Poin</p>
               </div>
             </div>
@@ -156,7 +160,7 @@ export function Leaderboard() {
                           {entry.username.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className={`font-medium ${entry.isCurrentUser ? 'text-orange-600 dark:text-orange-400' : 'text-gray-900 dark:text-white'}`}>
+                          <p className={`font-medium ${entry.isCurrentUser ? 'text-orange-700 dark:text-orange-400' : 'text-gray-900 dark:text-white'}`}>
                             {entry.username}
                             {entry.isCurrentUser && <span className="ml-2 px-2 py-0.5 text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded">Anda</span>}
                           </p>

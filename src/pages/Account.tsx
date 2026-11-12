@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 export function Account() {
   const { user, isAuthenticated, logout } = useAuth();
-  const { totalPoints, accuracy, attempts } = useProgress();
+  const { totalPoints, accuracy, attempts, isLoading: progressLoading } = useProgress();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -90,7 +90,7 @@ export function Account() {
 
         {/* Profile Card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
-          <div className="bg-gradient-to-r from-orange-600 to-amber-600 p-6">
+          <div className="bg-gradient-to-r from-orange-700 to-amber-700 p-6">
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-4xl font-bold text-white">
                 {user.username.charAt(0).toUpperCase()}
@@ -102,20 +102,20 @@ export function Account() {
                       type="text"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50"
+                      className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                       maxLength={30}
                       autoFocus
                     />
                     <button
                       onClick={handleSaveName}
                       disabled={loading}
-                      className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors text-sm"
+                      className="px-3 py-2 bg-white hover:bg-orange-50 text-orange-700 rounded-lg transition-colors text-sm"
                     >
                       Simpan
                     </button>
                     <button
                       onClick={() => { setEditingName(false); setNewName(user.username); }}
-                      className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors text-sm"
+                      className="px-3 py-2 bg-white hover:bg-orange-50 text-orange-700 rounded-lg transition-colors text-sm"
                     >
                       Batal
                     </button>
@@ -125,7 +125,7 @@ export function Account() {
                     <h2 className="text-2xl font-bold text-white">{user.username}</h2>
                     <button
                       onClick={() => setEditingName(true)}
-                      className="flex items-center gap-1 text-white/80 hover:text-white text-sm mt-1"
+                      className="flex items-center gap-1 text-white/90 hover:text-white text-sm mt-1"
                     >
                       <FaEdit className="w-4 h-4" />
                       Ganti nama
@@ -143,18 +143,21 @@ export function Account() {
                 value={formatPrice(totalPoints)}
                 label="Total Poin"
                 color="orange"
+                loading={progressLoading}
               />
               <StatCard
                 icon={<FaHistory className="w-6 h-6" />}
                 value={`${accuracy}%`}
                 label="Akurasi"
                 color="green"
+                loading={progressLoading}
               />
               <StatCard
                 icon={<FaHistory className="w-6 h-6" />}
                 value={totalAnswered}
                 label="Soal Dijawab"
                 color="blue"
+                loading={progressLoading}
               />
             </div>
 
@@ -170,7 +173,7 @@ export function Account() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <FaUser className="text-orange-600 dark:text-orange-400" />
+              <FaUser className="text-orange-700 dark:text-orange-400" />
               Pengaturan
             </h2>
           </div>
@@ -218,17 +221,21 @@ export function Account() {
   );
 }
 
-function StatCard({ icon, value, label, color }: { icon: React.ReactNode; value: string | number; label: string; color: string }) {
+function StatCard({ icon, value, label, color, loading }: { icon: React.ReactNode; value: string | number; label: string; color: string; loading?: boolean }) {
   const colorClasses = {
-    orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
-    green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
-    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400',
+    green: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400',
+    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400',
   };
 
   return (
     <div className={`p-4 rounded-xl text-center ${colorClasses[color as keyof typeof colorClasses]}`}>
       <div className="mx-auto mb-2">{icon}</div>
-      <p className="text-2xl font-bold">{value}</p>
+      {loading ? (
+        <div className="h-7 w-16 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true" />
+      ) : (
+        <p className="text-2xl font-bold">{value}</p>
+      )}
       <p className="text-sm font-medium">{label}</p>
     </div>
   );

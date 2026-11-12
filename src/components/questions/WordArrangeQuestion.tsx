@@ -15,7 +15,6 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
 
   const tiles = item.tiles || [];
 
-  // Initialize on first render
   if (availableTiles.length === 0 && tiles.length > 0) {
     const shuffled = [...tiles].sort(() => Math.random() - 0.5);
     setAvailableTiles(shuffled);
@@ -71,25 +70,24 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
   const isComplete = answerTiles.length === tiles.length && tiles.length > 0;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Tap tiles to build your sentence
+          Jawaban Anda (ketuk tile di bawah untuk menambah)
         </label>
-        
-        {/* Answer area */}
+
         <div
-          className={`min-h-[80px] p-4 border-2 rounded-lg flex flex-wrap gap-2 items-start transition-colors ${
+          className={`min-h-[56px] p-2.5 border-2 rounded-lg flex flex-wrap gap-1.5 items-start transition-colors ${
             disabled || submitted
               ? 'bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600'
-              : 'border-dashed border-gray-300 dark:border-gray-500 hover:border-orange-400'
+              : 'border-dashed border-gray-400 dark:border-gray-500 hover:border-orange-500'
           } ${result ? (result.isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-red-500 bg-red-50 dark:bg-red-900/20') : ''}`}
           role="list"
-          aria-label="Your answer"
+          aria-label="Jawaban Anda"
         >
           {answerTiles.length === 0 && !disabled && !submitted && (
-            <p className="text-gray-400 dark:text-gray-500 text-center w-full py-8">
-              Tap tiles below to add them here
+            <p className="text-gray-500 text-center w-full py-4 text-sm">
+              Ketuk tile di bawah untuk menyusun jawaban
             </p>
           )}
           {answerTiles.map((tile, index) => (
@@ -99,7 +97,7 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
               onClick={() => moveToAvailable(index)}
               onKeyDown={(e) => handleKeyDown(e, tile, 'answer', index)}
               disabled={disabled || submitted}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 ${
                 disabled || submitted
                   ? 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 cursor-not-allowed'
                   : 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 hover:bg-orange-200 dark:hover:bg-orange-900/50'
@@ -112,36 +110,34 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
           ))}
         </div>
 
-        {/* Controls */}
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="flex flex-wrap gap-2 mt-2">
           <button
             type="button"
             onClick={handleUndo}
             disabled={disabled || submitted || answerTiles.length === 0}
-            className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            ↩ Undo
+            ↩ Urungkan
           </button>
           <button
             type="button"
             onClick={handleReset}
             disabled={disabled || submitted || answerTiles.length === 0}
-            className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            ↻ Reset
+            ↻ Atur Ulang
           </button>
         </div>
       </div>
 
-      {/* Available tiles */}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Available words (tap to add)
+          Kata tersedia
         </label>
         <div
-          className="flex flex-wrap gap-2"
+          className="flex flex-wrap gap-1.5"
           role="list"
-          aria-label="Available words"
+          aria-label="Kata tersedia"
         >
           {availableTiles.map((tile, index) => (
             <button
@@ -150,10 +146,10 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
               onClick={() => moveToAnswer(index)}
               onKeyDown={(e) => handleKeyDown(e, tile, 'available', index)}
               disabled={disabled || submitted}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 ${
                 disabled || submitted
-                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 cursor-not-allowed'
-                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'
+                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 cursor-not-allowed'
+                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20'
               }`}
               role="listitem"
               aria-pressed="false"
@@ -167,9 +163,9 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
       <button
         type="submit"
         disabled={!isComplete || disabled || submitted}
-        className="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:hover:bg-gray-300 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        className="w-full py-3 px-4 bg-orange-700 hover:bg-orange-800 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:text-gray-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
       >
-        {submitted ? 'Submitted' : 'Submit Answer'}
+        {submitted ? 'Terkirim' : 'Kirim Jawaban'}
       </button>
 
       {result && (
@@ -180,11 +176,11 @@ export function WordArrangeQuestion({ item, onSubmit, disabled, result }: WordAr
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{result.isCorrect ? '🎉' : '😔'}</span>
             <h4 className={`font-semibold ${result.isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
-              {result.isCorrect ? 'Correct!' : 'Incorrect'}
+              {result.isCorrect ? 'Benar!' : 'Salah'}
             </h4>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            The correct sentence is: <strong>{result.correctAnswer}</strong>
+            Jawaban yang benar: <strong>{result.correctAnswer}</strong>
           </p>
         </div>
       )}

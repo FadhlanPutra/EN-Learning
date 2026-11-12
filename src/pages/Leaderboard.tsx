@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { LeaderboardEntry } from '../types';
 import { getLeaderboard } from '../services/itemService';
 import { formatPrice } from '../utils/format';
-import { useAuth } from '../context/AuthContext';
+import { useRequiredUser } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { FaTrophy, FaMedal, FaCrown, FaUsers, FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 export function Leaderboard() {
-  const { user } = useAuth();
+  const user = useRequiredUser();
   const { totalPoints, isLoading: progressLoading } = useProgress();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,11 +25,11 @@ export function Leaderboard() {
       // Mark current user
       const updatedData = data.map((entry) => ({
         ...entry,
-        isCurrentUser: false, // In a real app, we'd match by user ID
+        isCurrentUser: entry.userId === user.id,
       }));
       setLeaderboard(updatedData);
     } catch (err) {
-      setError('Failed to load leaderboard');
+      setError('Gagal memuat peringkat.');
     } finally {
       setLoading(false);
     }
@@ -68,10 +68,10 @@ export function Leaderboard() {
       <div className="min-h-screen py-12 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Failed to Load Leaderboard</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Gagal Memuat Peringkat</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
           <button onClick={loadLeaderboard} className="px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
-            Try Again
+            Coba Lagi
           </button>
         </div>
       </div>
@@ -146,7 +146,7 @@ export function Leaderboard() {
               ) : (
                 leaderboard.map((entry) => (
                   <tr
-                    key={entry.username}
+                    key={entry.userId || entry.username}
                     className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${
                       entry.isCurrentUser ? 'bg-orange-50 dark:bg-orange-900/20' : ''
                     }`}
@@ -157,7 +157,7 @@ export function Leaderboard() {
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white font-bold">
-                          {entry.username.charAt(0).toUpperCase()}
+                          {(entry.username || '?').charAt(0).toUpperCase()}
                         </div>
                         <div>
                           <p className={`font-medium ${entry.isCurrentUser ? 'text-orange-700 dark:text-orange-400' : 'text-gray-900 dark:text-white'}`}>

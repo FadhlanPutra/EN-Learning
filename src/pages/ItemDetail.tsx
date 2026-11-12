@@ -5,7 +5,6 @@ import { getItemById, getItems } from '../services/itemService';
 import { formatPrice } from '../utils/format';
 import { getLevel, getLevelLabel, getLevelColor, getLevelIcon } from '../utils/level';
 import { MultipleChoiceQuestion, ShortAnswerQuestion, WordArrangeQuestion, GuessQuestion } from '../components/questions';
-import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { useToast } from '../context/ToastContext';
 import { FaArrowLeft, FaLock, FaArrowRight } from 'react-icons/fa';
@@ -13,7 +12,6 @@ import { FaArrowLeft, FaLock, FaArrowRight } from 'react-icons/fa';
 export function ItemDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
   const { attempts, submitAnswer: submitAnswerProgress, refreshProgress, isLoading: progressLoading } = useProgress();
   const { showToast } = useToast();
 
@@ -59,15 +57,13 @@ export function ItemDetail() {
         setFullItem(fullItemData as ItemWithAnswers);
       }
 
-      if (isAuthenticated && user) {
-        const existingAttempt = attempts.find((a) => a.itemId === data.id);
-        if (existingAttempt) {
-          setAttempt(existingAttempt);
-          setResult({
-            isCorrect: existingAttempt.isCorrect,
-            correctAnswer: existingAttempt.correctAnswer,
-          });
-        }
+      const existingAttempt = attempts.find((a) => a.itemId === data.id);
+      if (existingAttempt) {
+        setAttempt(existingAttempt);
+        setResult({
+          isCorrect: existingAttempt.isCorrect,
+          correctAnswer: existingAttempt.correctAnswer,
+        });
       }
     } catch (err) {
       setError('Gagal memuat barang.');
@@ -77,7 +73,7 @@ export function ItemDetail() {
   };
 
   const handleSubmit = async (answer: string | string[]) => {
-    if (!user || !item) return;
+    if (!item) return;
 
     setSubmitting(true);
     try {

@@ -1,36 +1,28 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth, useRequiredUser } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
 import { useToast } from '../context/ToastContext';
 import { formatPrice } from '../utils/format';
 import { FaTrophy, FaHistory, FaSignOutAlt, FaArrowLeft, FaUser, FaEdit } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 
 export function Account() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const user = useRequiredUser();
+  const { logout } = useAuth();
   const { totalPoints, accuracy, attempts, isLoading: progressLoading } = useProgress();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [editingName, setEditingName] = useState(false);
-  const [newName, setNewName] = useState('');
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    } else if (user) {
-      setNewName(user.username);
-    }
-  }, [isAuthenticated, user, navigate]);
+  const [newName, setNewName] = useState(user.username);
 
   const handleLogout = async () => {
     setLoading(true);
     try {
       await logout();
       showToast('Berhasil keluar.', 'success');
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (err) {
       showToast('Gagal keluar.', 'error');
     } finally {
@@ -55,17 +47,6 @@ export function Account() {
     }
   };
 
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse max-w-md mx-auto px-4">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
-          <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl mt-4" />
-        </div>
-      </div>
-    );
-  }
-
   const correctAnswers = attempts.filter(a => a.isCorrect).length;
   const totalAnswered = attempts.length;
 
@@ -77,19 +58,19 @@ export function Account() {
           <div className="flex items-center gap-4">
             <Link
               to="/shop"
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <FaArrowLeft className="w-6 h-6" />
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Akun</h1>
-              <p className="text-gray-600 dark:text-gray-400">Kelola profil dan pengaturan</p>
+              <h1 className="text-3xl font-bold text-gray-900">Akun</h1>
+              <p className="text-gray-600">Kelola profil dan pengaturan</p>
             </div>
           </div>
         </div>
 
         {/* Profile Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
           <div className="bg-gradient-to-r from-orange-700 to-amber-700 p-6">
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-4xl font-bold text-white">
@@ -135,7 +116,7 @@ export function Account() {
               </div>
             </div>
           </div>
-          
+
           <div className="p-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <StatCard
@@ -161,8 +142,8 @@ export function Account() {
               />
             </div>
 
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
                 Benar: {correctAnswers} dari {totalAnswered} soal
               </p>
             </div>
@@ -170,24 +151,24 @@ export function Account() {
         </div>
 
         {/* Settings */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <FaUser className="text-orange-700 dark:text-orange-400" />
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-6">
+          <div className="p-6 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <FaUser className="text-orange-700" />
               Pengaturan
             </h2>
           </div>
-          
+
           <div className="p-6">
-            <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
-              <h3 className="font-medium text-gray-900 dark:text-white mb-4">Zona Bahaya</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <div className="pt-6 border-t border-gray-200">
+              <h3 className="font-medium text-gray-900 mb-4">Zona Bahaya</h3>
+              <p className="text-sm text-gray-600 mb-4">
                 Keluar akan mengakhiri sesi di perangkat ini. Poin kelompok tetap tersimpan dan bisa diakses lagi dengan memasukkan nama yang sama.
               </p>
               <button
                 onClick={handleLogout}
                 disabled={loading}
-                className="w-full py-3 px-4 border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded-lg font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 border border-red-300 text-red-600 rounded-lg font-medium hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center gap-2"
               >
                 <FaSignOutAlt className="w-5 h-5" />
                 {loading ? 'Keluar...' : 'Keluar / Ganti Kelompok'}
@@ -200,20 +181,20 @@ export function Account() {
         <div className="grid grid-cols-2 gap-4">
           <Link
             to="/history"
-            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 text-center hover:shadow-md transition-shadow"
+            className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow"
           >
-            <FaHistory className="w-10 h-10 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900 dark:text-white">Riwayat</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Lihat semua soal yang dijawab</p>
+            <FaHistory className="w-10 h-10 text-blue-600 mx-auto mb-2" />
+            <h3 className="font-semibold text-gray-900">Riwayat</h3>
+            <p className="text-sm text-gray-600 mt-1">Lihat semua soal yang dijawab</p>
           </Link>
-          
+
           <Link
             to="/leaderboard"
-            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 text-center hover:shadow-md transition-shadow"
+            className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow"
           >
-            <FaTrophy className="w-10 h-10 text-amber-600 dark:text-amber-400 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900 dark:text-white">Peringkat</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Cek posisi kelompok Anda</p>
+            <FaTrophy className="w-10 h-10 text-amber-600 mx-auto mb-2" />
+            <h3 className="font-semibold text-gray-900">Peringkat</h3>
+            <p className="text-sm text-gray-600 mt-1">Cek posisi kelompok Anda</p>
           </Link>
         </div>
       </div>
@@ -223,16 +204,16 @@ export function Account() {
 
 function StatCard({ icon, value, label, color, loading }: { icon: React.ReactNode; value: string | number; label: string; color: string; loading?: boolean }) {
   const colorClasses = {
-    orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400',
-    green: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400',
-    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400',
+    orange: 'bg-orange-50 text-orange-700',
+    green: 'bg-green-50 text-green-700',
+    blue: 'bg-blue-50 text-blue-700',
   };
 
   return (
     <div className={`p-4 rounded-xl text-center ${colorClasses[color as keyof typeof colorClasses]}`}>
       <div className="mx-auto mb-2">{icon}</div>
       {loading ? (
-        <div className="h-7 w-16 mx-auto bg-gray-200 dark:bg-gray-700 rounded animate-pulse" aria-hidden="true" />
+        <div className="h-7 w-16 mx-auto bg-gray-200 rounded animate-pulse" aria-hidden="true" />
       ) : (
         <p className="text-2xl font-bold">{value}</p>
       )}

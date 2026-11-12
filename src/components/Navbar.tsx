@@ -1,111 +1,138 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes, FaTrophy, FaHistory, FaUsers, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { FaBars, FaTimes, FaTrophy, FaHistory, FaUser, FaSignOutAlt, FaSignInAlt } from 'react-icons/fa';
 import { formatPrice } from '../utils/format';
 import { useAuth } from '../context/AuthContext';
 import { useProgress } from '../context/ProgressContext';
+import { useToast } from '../context/ToastContext';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, logout, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
   const { totalPoints, isLoading: progressLoading } = useProgress();
+  const { showToast } = useToast();
 
-  const navLinks = [
-    { path: '/', label: 'Home', icon: () => <FaUsers className="w-5 h-5" /> },
-    { path: '/shop', label: 'Shop', icon: () => <FaTrophy className="w-5 h-5" /> },
-    { path: '/leaderboard', label: 'Leaderboard', icon: () => <FaTrophy className="w-5 h-5" /> },
-  ];
-
-  const authLinks = isAuthenticated
-    ? [
-        { path: '/history', label: 'History', icon: () => <FaHistory className="w-5 h-5" /> },
-        { path: '/account', label: 'Account', icon: () => <FaUser className="w-5 h-5" /> },
-      ]
-    : [
-        { path: '/login', label: 'Login', icon: () => <FaSignOutAlt className="w-5 h-5" /> },
-      ];
+  if (location.pathname === '/login') return null;
 
   const handleLogout = async () => {
     await logout();
+    showToast('Berhasil keluar.', 'success');
+    navigate('/', { replace: true });
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 text-xl font-bold text-orange-700">
-            <span className="text-2xl">🏪</span>
-            <span>Quiz Shop</span>
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-orange-700">
+              <span className="text-2xl">🏪</span>
+              <span>Quiz Shop</span>
+            </Link>
 
-          <div className="hidden md:flex md:items-center md:gap-6">
-            {navLinks.map((link) => (
+            <div className="hidden md:flex md:items-center md:gap-4">
               <Link
-                key={link.path}
-                to={link.path}
+                to="/"
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.path
+                  location.pathname === '/'
                     ? 'bg-orange-50 text-orange-700'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
-                {link.icon()}
-                {link.label}
+                Home
               </Link>
-            ))}
 
-            {authLoading || progressLoading ? (
-              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
-            ) : isAuthenticated ? (
-              <div className="flex items-center gap-3 px-3 py-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <span className="text-sm font-medium text-orange-700">
-                  {formatPrice(totalPoints)}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">Points</span>
-              </div>
-            ) : null}
-
-            {authLoading ? (
-              <>
-                <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
-                <div className="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
-              </>
-            ) : (
-              <>
-                {authLinks.map((link) => (
+              {isAuthenticated && (
+                <>
                   <Link
-                    key={link.path}
-                    to={link.path}
+                    to="/shop"
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      location.pathname === link.path
+                      location.pathname === '/shop'
                         ? 'bg-orange-50 text-orange-700'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
-                    {link.icon()}
-                    {link.label}
+                    Shop
                   </Link>
-                ))}
-
-                {isAuthenticated && (
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                  <Link
+                    to="/leaderboard"
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      location.pathname === '/leaderboard'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
                   >
-                    <FaSignOutAlt className="w-5 h-5" />
-                    Logout
-                  </button>
+                    Leaderboard
+                  </Link>
+                  <Link
+                    to="/history"
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      location.pathname === '/history'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <FaHistory className="w-5 h-5" />
+                    History
+                  </Link>
+                  <Link
+                    to="/account"
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      location.pathname === '/account'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <FaUser className="w-5 h-5" />
+                    Account
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="hidden md:flex md:items-center md:gap-4">
+            {authLoading ? (
+              <div className="h-8 w-32 bg-gray-200 rounded-lg animate-pulse" aria-hidden="true" />
+            ) : isAuthenticated ? (
+              <>
+                {progressLoading ? (
+                  <div className="h-8 w-24 bg-gray-200 rounded-lg animate-pulse" aria-hidden="true" />
+                ) : (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg">
+                    <span className="text-sm font-medium text-orange-700">
+                      {formatPrice(totalPoints)}
+                    </span>
+                    <span className="text-xs text-gray-500">Points</span>
+                  </div>
                 )}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  <FaSignOutAlt className="w-5 h-5" />
+                  Logout
+                </button>
               </>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center gap-1.5 px-4 py-2 bg-orange-700 text-white rounded-lg text-sm font-medium hover:bg-orange-800 transition-colors"
+              >
+                <FaSignInAlt className="w-5 h-5" />
+                Masuk
+              </Link>
             )}
           </div>
 
+          {/* Mobile */}
           <div className="md:hidden flex items-center gap-4">
-            {authLoading || progressLoading ? (
-              <div className="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
+            {authLoading ? (
+              <div className="h-8 w-20 bg-gray-200 rounded-lg animate-pulse" aria-hidden="true" />
             ) : isAuthenticated ? (
-              <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+              <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg">
                 <span className="text-sm font-medium text-orange-700">
                   {formatPrice(totalPoints)}
                 </span>
@@ -123,53 +150,71 @@ export function Navbar() {
         </div>
 
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="md:hidden py-4 border-t border-gray-200">
             <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
-                    location.pathname === link.path
-                      ? 'bg-orange-50 text-orange-700'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  {link.icon()}
-                  {link.label}
-                </Link>
-              ))}
+              <Link
+                to="/"
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
+                  location.pathname === '/'
+                    ? 'bg-orange-50 text-orange-700'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                Home
+              </Link>
 
               {authLoading ? (
-                <>
-                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
-                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
-                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" aria-hidden="true" />
-                </>
+                <div className="h-10 bg-gray-200 rounded-lg animate-pulse" aria-hidden="true" />
               ) : isAuthenticated ? (
                 <>
-                  <div className="px-3 py-2.5 bg-orange-50 dark:bg-orange-900/30 rounded-lg flex items-center gap-3">
-                    <FaTrophy className="w-5 h-5 text-orange-700" />
-                    <span className="text-base font-medium text-orange-700">
-                      {formatPrice(totalPoints)} Points
-                    </span>
-                  </div>
-                  {authLinks.map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
-                        location.pathname === link.path
-                          ? 'bg-orange-50 text-orange-700'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      {link.icon()}
-                      {link.label}
-                    </Link>
-                  ))}
+                  <Link
+                    to="/shop"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
+                      location.pathname === '/shop'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    Shop
+                  </Link>
+                  <Link
+                    to="/leaderboard"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
+                      location.pathname === '/leaderboard'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <FaTrophy className="w-5 h-5" />
+                    Leaderboard
+                  </Link>
+                  <Link
+                    to="/history"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
+                      location.pathname === '/history'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <FaHistory className="w-5 h-5" />
+                    History
+                  </Link>
+                  <Link
+                    to="/account"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
+                      location.pathname === '/account'
+                        ? 'bg-orange-50 text-orange-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <FaUser className="w-5 h-5" />
+                    Account
+                  </Link>
                   <button
                     onClick={() => { handleLogout(); setIsOpen(false); }}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-100"
@@ -179,21 +224,14 @@ export function Navbar() {
                   </button>
                 </>
               ) : (
-                authLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium ${
-                      location.pathname === link.path
-                        ? 'bg-orange-50 text-orange-700'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {link.icon()}
-                    {link.label}
-                  </Link>
-                ))
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-orange-700 hover:bg-orange-50"
+                >
+                  <FaSignInAlt className="w-5 h-5" />
+                  Masuk
+                </Link>
               )}
             </div>
           </div>

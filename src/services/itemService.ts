@@ -16,19 +16,19 @@ function mapItemFromDb(item: {
 }): Item {
   return {
     id: item.id,
-    name: item.name,
-    price: item.price,
-    level: item.level as 1 | 2 | 3,
+    name: item.name ?? '',
+    price: Number(item.price ?? 0),
+    level: (item.level ?? 1) as 1 | 2 | 3,
     imageUrl: item.image_url || undefined,
-    type: item.type as Item['type'],
-    category: item.category as Item['category'],
-    question: item.question,
+    type: (item.type ?? 'multiple_choice') as Item['type'],
+    category: (item.category ?? 'vocabulary') as Item['category'],
+    question: item.question ?? '',
     clue: item.clue || undefined,
-    tiles: item.tiles || undefined,
-    choices: item.item_choices
+    tiles: Array.isArray(item.tiles) ? item.tiles : undefined,
+    choices: Array.isArray(item.item_choices)
       ? [...item.item_choices].sort((a, b) => a.sort_order - b.sort_order).map((c) => ({
           id: c.id,
-          text: c.label,
+          text: c.label ?? '',
         }))
       : undefined,
   };
@@ -53,7 +53,7 @@ export async function getItems(): Promise<Item[]> {
     .order('price', { ascending: true });
 
   if (error) throw new Error(error.message);
-  return (data || []).map(mapItemFromDb);
+  return (data ?? []).map(mapItemFromDb);
 }
 
 export async function getItemById(id: string): Promise<Item | null> {
@@ -97,21 +97,21 @@ export async function submitAnswer(
     throw new Error(msg);
   }
 
-  if (!data || data.length === 0) {
+  const row = Array.isArray(data) ? data[0] : data;
+
+  if (!row || typeof row !== 'object') {
     throw new Error('Tidak ada respons dari server.');
   }
 
-  const row = data[0];
-
   const attempt: Attempt = {
-    id: row.id,
-    userId: row.user_id,
-    itemId: row.item_id,
+    id: row.id ?? '',
+    userId: row.user_id ?? _userId,
+    itemId: row.item_id ?? itemId,
     answer: answerText,
-    isCorrect: row.is_correct,
-    correctAnswer: row.correct_answer,
-    pointsEarned: row.points_earned,
-    createdAt: row.created_at,
+    isCorrect: Boolean(row.is_correct),
+    correctAnswer: row.correct_answer ?? '',
+    pointsEarned: Number(row.points_earned ?? 0),
+    createdAt: row.created_at ?? new Date().toISOString(),
   };
 
   const item = await getItemById(itemId);
@@ -127,7 +127,7 @@ export async function getMyAttempts(): Promise<Attempt[]> {
     .order('created_at', { ascending: false });
 
   if (error) throw new Error(error.message);
-  return (data || []).map(mapAttemptFromDb);
+  return (data ?? []).map(mapAttemptFromDb);
 }
 
 export async function getHistory(_userId: string): Promise<Attempt[]> {
@@ -140,7 +140,7 @@ export async function getHistory(_userId: string): Promise<Attempt[]> {
     .order('created_at', { ascending: false });
 
   if (error) throw new Error(error.message);
-  return (data || []).map(mapAttemptFromDb);
+  return (data ?? []).map(mapAttemptFromDb);
 }
 
 function mapAttemptFromDb(row: {
@@ -159,25 +159,33 @@ function mapAttemptFromDb(row: {
     level: number;
     type: string;
     category: string;
-  };
+  } | Array<{
+    id: string;
+    name: string;
+    price: number;
+    level: number;
+    type: string;
+    category: string;
+  }>;
 }): Attempt {
+  const itemRow = Array.isArray(row.items) ? row.items[0] : row.items;
   return {
     id: row.id,
     userId: row.user_id,
     itemId: row.item_id,
     answer: row.answer,
-    isCorrect: row.is_correct,
-    correctAnswer: row.correct_answer,
-    pointsEarned: row.points_earned,
+    isCorrect: Boolean(row.is_correct),
+    correctAnswer: row.correct_answer ?? '',
+    pointsEarned: Number(row.points_earned ?? 0),
     createdAt: row.created_at,
-    item: row.items
+    item: itemRow
       ? {
-          id: row.items.id,
-          name: row.items.name,
-          price: row.items.price,
-          level: row.items.level as 1 | 2 | 3,
-          type: row.items.type as Item['type'],
-          category: row.items.category as Item['category'],
+          id: itemRow.id,
+          name: itemRow.name ?? '',
+          price: Number(itemRow.price ?? 0),
+          level: (itemRow.level ?? 1) as 1 | 2 | 3,
+          type: (itemRow.type ?? 'multiple_choice') as Item['type'],
+          category: (itemRow.category ?? 'vocabulary') as Item['category'],
         }
       : undefined,
   };
@@ -194,20 +202,20 @@ export async function getLeaderboard(): Promise<{
   const { data, error } = await supabase.rpc('get_leaderboard');
 
   if (error) throw new Error(error.message);
-  return (data || []).map((row: {
+  return (data ?? []).map((row: {
     rank: number | string;
     user_id: string;
-    username: string;
+    username: string | null;
     total_points: number | string;
     correct_count: number | string;
     answered_count: number | string;
   }) => ({
-    rank: Number(row.rank),
-    userId: row.user_id,
-    username: row.username,
-    totalPoints: Number(row.total_points),
-    correctCount: Number(row.correct_count),
-    answeredCount: Number(row.answered_count),
+    rank: Number(row.rank ?? 0),
+    userId: row.user_id ?? '',
+    username: row.username ?? '',
+    totalPoints: Number(row.total_points ?? 0),
+    correctCount: Number(row.correct_count ?? 0),
+    answeredCount: Number(row.answered_count ?? 0),
   }));
 }
 

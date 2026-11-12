@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useProgress } from '../context/ProgressContext';
 import { useAuth } from '../context/AuthContext';
+import { useProgress } from '../context/ProgressContext';
 import { PointsBadge } from '../components/PointsBadge';
 import { FaPlay, FaUsers, FaTrophy, FaArrowRight } from 'react-icons/fa';
 
 export function Home() {
-  const { totalPoints, isLoading } = useProgress();
-  const { isAuthenticated } = useAuth();
+  const { user, isLoading } = useAuth();
+  const { totalPoints, isLoading: progressLoading } = useProgress();
 
   const steps = [
     { number: 1, title: 'Form Groups', description: 'Divide students into several groups. Each group will work together to answer questions.' },
@@ -37,25 +37,39 @@ export function Home() {
             <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl">
               A classroom game where groups buy questions like items in a shop. Answer correctly to earn points!
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                to="/shop"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
-              >
-                <FaPlay className="w-5 h-5" />
-                Start Shopping
-              </Link>
-              <Link
-                to="/leaderboard"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-black/20 text-white font-semibold rounded-lg hover:bg-black/30 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700 backdrop-blur-sm"
-              >
-                <FaTrophy className="w-5 h-5" />
-                View Leaderboard
-              </Link>
+<div className="flex flex-wrap gap-4">
+              {isLoading ? (
+                <div className="h-12 w-56 bg-white/20 rounded-lg animate-pulse" aria-hidden="true" />
+              ) : user ? (
+                <Link
+                  to="/shop"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
+                >
+                  <FaPlay className="w-5 h-5" />
+                  Mulai belanja soal
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
+                >
+                  <FaUsers className="w-5 h-5" />
+                  Masuk dengan nama kelompok
+                </Link>
+              )}
+              {user && (
+                <Link
+                  to="/leaderboard"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-black/20 text-white font-semibold rounded-lg hover:bg-black/30 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700 backdrop-blur-sm"
+                >
+                  <FaTrophy className="w-5 h-5" />
+                  View Leaderboard
+                </Link>
+              )}
             </div>
           </div>
         </div>
-        
+
         {/* Decorative elements */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-orange-700 to-transparent" aria-hidden="true" />
       </section>
@@ -63,23 +77,27 @@ export function Home() {
       {/* Stats Bar */}
       <section className="-mt-16 mb-16 px-4 relative z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-            <FaUsers className="w-10 h-10 text-orange-700 dark:text-orange-400 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Group Learning</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Designed for classroom group activities</p>
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-center">
+            <FaUsers className="w-10 h-10 text-orange-700 mx-auto mb-3" />
+            <h3 className="text-2xl font-bold text-gray-900">Group Learning</h3>
+            <p className="text-gray-600 mt-1">Designed for classroom group activities</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-            <FaTrophy className="w-10 h-10 text-amber-600 dark:text-amber-400 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Progressive Levels</h3>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Easy → Medium → Challenge</p>
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-center">
+            <FaTrophy className="w-10 h-10 text-amber-600 mx-auto mb-3" />
+            <h3 className="text-2xl font-bold text-gray-900">Progressive Levels</h3>
+            <p className="text-gray-600 mt-1">Easy → Medium → Challenge</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-            {isLoading ? (
-              <div className="h-9 w-24 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" aria-hidden="true" />
-            ) : (
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 text-center">
+            {isLoading || (user && progressLoading) ? (
+              <div className="h-9 w-24 mx-auto bg-gray-200 rounded-full animate-pulse" aria-hidden="true" />
+            ) : user ? (
               <PointsBadge points={totalPoints} size="lg" showLabel={false} />
+            ) : (
+              <div className="h-9 w-24 mx-auto flex items-center justify-center">
+                <span className="text-2xl font-bold text-gray-400">—</span>
+              </div>
             )}
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Total Points Earned</p>
+            <p className="text-gray-600 mt-1">{user ? 'Total Points Earned' : 'Masuk untuk melihat poin'}</p>
           </div>
         </div>
       </section>
@@ -87,8 +105,8 @@ export function Home() {
       {/* How to Play */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">How to Play</h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">How to Play</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Follow these steps to run a successful Quiz Shop session in your classroom
           </p>
         </div>
@@ -97,15 +115,15 @@ export function Home() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+              className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-orange-700 dark:text-orange-400">{step.number}</span>
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-orange-100 border border-orange-200 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-orange-700">{step.number}</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{step.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{step.description}</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>
+                  <p className="text-gray-600">{step.description}</p>
                 </div>
               </div>
             </div>
@@ -114,11 +132,11 @@ export function Home() {
       </section>
 
       {/* Features */}
-      <section className="bg-gray-50 dark:bg-gray-900/50 py-20">
+      <section className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">Question Types</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Question Types</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Four different question types keep the game engaging and challenging
             </p>
           </div>
@@ -164,20 +182,34 @@ export function Home() {
             Gather your groups, login, and begin your English learning adventure!
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              to={isAuthenticated ? '/shop' : '/login'}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
-            >
-              <FaArrowRight className="w-5 h-5" />
-              {isAuthenticated ? 'Go to Shop' : 'Login to Play'}
-            </Link>
-            <Link
-              to="/leaderboard"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-black/20 text-white font-semibold rounded-lg hover:bg-black/30 transition-colors backdrop-blur-sm"
-            >
-              <FaTrophy className="w-5 h-5" />
-              View Rankings
-            </Link>
+            {isLoading ? (
+              <div className="h-12 w-48 bg-white/20 rounded-lg animate-pulse" aria-hidden="true" />
+            ) : user ? (
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
+              >
+                <FaArrowRight className="w-5 h-5" />
+                Mulai belanja soal
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
+              >
+                <FaUsers className="w-5 h-5" />
+                Masuk dengan nama kelompok
+              </Link>
+            )}
+            {user && (
+              <Link
+                to="/leaderboard"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-black/20 text-white font-semibold rounded-lg hover:bg-black/30 transition-colors backdrop-blur-sm"
+              >
+                <FaTrophy className="w-5 h-5" />
+                View Rankings
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -187,18 +219,18 @@ export function Home() {
 
 function FeatureCard({ icon, title, level, description, color }: { icon: string; title: string; level: string; description: string; color: string }) {
   const colorClasses = {
-    green: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-800',
-    blue: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800',
-    purple: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-800',
-    orange: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 border-orange-200 dark:border-orange-800',
+    green: 'bg-green-100 text-green-800 border-green-200',
+    blue: 'bg-blue-100 text-blue-800 border-blue-200',
+    purple: 'bg-purple-100 text-purple-800 border-purple-200',
+    orange: 'bg-orange-100 text-orange-800 border-orange-200',
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl p-6 border ${colorClasses[color as keyof typeof colorClasses]} hover:shadow-lg transition-shadow`}>
+    <div className={`bg-white rounded-xl p-6 border ${colorClasses[color as keyof typeof colorClasses]} hover:shadow-lg transition-shadow`}>
       <div className="text-4xl mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{title}</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-1">{title}</h3>
       <p className="text-sm font-medium mb-3">{level}</p>
-      <p className="text-gray-600 dark:text-gray-400">{description}</p>
+      <p className="text-gray-600">{description}</p>
     </div>
   );
 }

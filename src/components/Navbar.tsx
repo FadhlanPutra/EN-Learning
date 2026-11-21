@@ -18,7 +18,7 @@ export function Navbar() {
 
   const handleLogout = async () => {
     await logout();
-    showToast('Berhasil keluar.', 'success');
+    showToast('Successfully logged out.', 'success');
     navigate('/', { replace: true });
   };
 
@@ -105,7 +105,7 @@ export function Navbar() {
                     <span className="text-sm font-medium text-orange-700">
                       {formatPrice(totalPoints)}
                     </span>
-                    <span className="text-xs text-gray-500">Points</span>
+                    <span className="text-xs text-gray-500">Balance</span>
                   </div>
                 )}
                 <button
@@ -122,7 +122,7 @@ export function Navbar() {
                 className="flex items-center gap-1.5 px-4 py-2 bg-orange-700 text-white rounded-lg text-sm font-medium hover:bg-orange-800 transition-colors"
               >
                 <FaSignInAlt className="w-5 h-5" />
-                Masuk
+                Login
               </Link>
             )}
           </div>
@@ -230,7 +230,7 @@ export function Navbar() {
                   className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-orange-700 hover:bg-orange-50"
                 >
                   <FaSignInAlt className="w-5 h-5" />
-                  Masuk
+                  Login
                 </Link>
               )}
             </div>

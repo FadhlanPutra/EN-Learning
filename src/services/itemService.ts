@@ -100,7 +100,7 @@ export async function submitAnswer(
   const row = Array.isArray(data) ? data[0] : data;
 
   if (!row || typeof row !== 'object') {
-    throw new Error('Tidak ada respons dari server.');
+    throw new Error('No response from server.');
   }
 
   const attempt: Attempt = {
@@ -115,7 +115,7 @@ export async function submitAnswer(
   };
 
   const item = await getItemById(itemId);
-  if (!item) throw new Error('Barang tidak ditemukan.');
+  if (!item) throw new Error('Item not found.');
 
   return { attempt, item };
 }
@@ -221,11 +221,11 @@ export async function getLeaderboard(): Promise<{
 
 function translateError(message: string): string {
   const errorMap: Record<string, string> = {
-    not_authenticated: 'Masukkan nama kelompok dulu.',
-    already_answered: 'Soal ini sudah dijawab dan tidak bisa diulang.',
-    invalid_choice: 'Pilihan jawaban tidak valid.',
-    empty_answer: 'Jawaban tidak boleh kosong.',
-    item_not_found: 'Barang tidak ditemukan.',
+    not_authenticated: 'Enter your group name first.',
+    already_answered: 'This question has already been answered and cannot be repeated.',
+    invalid_choice: 'Invalid choice.',
+    empty_answer: 'Answer cannot be empty.',
+    item_not_found: 'Item not found.',
   };
 
   for (const [key, translated] of Object.entries(errorMap)) {

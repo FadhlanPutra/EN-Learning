@@ -25,16 +25,16 @@ export function ShortAnswerQuestion({ onSubmit, disabled, result }: ShortAnswerQ
   };
 
   const buttonLabel = result
-    ? 'Terkirim'
+    ? 'Submitted'
     : disabled
-      ? 'Mengirim...'
-      : 'Kirim Jawaban';
+      ? 'Submitting...'
+      : 'Submit Answer';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <div>
         <label htmlFor="short-answer" className="block text-sm font-medium text-gray-700 mb-2">
-          Jawaban Anda
+          Your Answer
         </label>
         <textarea
           id="short-answer"
@@ -48,11 +48,11 @@ export function ShortAnswerQuestion({ onSubmit, disabled, result }: ShortAnswerQ
               ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
               : 'border-gray-300 hover:border-gray-400'
           } ${result ? (result.isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : ''}`}
-          placeholder="Ketik jawaban Anda di sini..."
+          placeholder="Type your answer here..."
           aria-describedby={result ? 'result-message' : undefined}
         />
         <p className="mt-1 text-xs text-gray-500">
-          Tekan Enter untuk mengirim (Shift+Enter untuk baris baru)
+          Press Enter to submit (Shift+Enter for a new line)
         </p>
       </div>
 
@@ -73,11 +73,11 @@ export function ShortAnswerQuestion({ onSubmit, disabled, result }: ShortAnswerQ
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{result.isCorrect ? '🎉' : '😔'}</span>
             <h4 className={`font-semibold ${result.isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-              {result.isCorrect ? 'Benar!' : 'Salah'}
+              {result.isCorrect ? 'Correct!' : 'Incorrect'}
             </h4>
           </div>
           <p className="text-sm text-gray-600">
-            Jawaban yang benar: <strong>{result.correctAnswer}</strong>
+            Correct answer: <strong>{result.correctAnswer}</strong>
           </p>
         </div>
       )}

@@ -25,10 +25,10 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
   };
 
   const buttonLabel = result
-    ? 'Terkirim'
+    ? 'Submitted'
     : disabled
-      ? 'Mengirim...'
-      : 'Kirim Tebakan';
+      ? 'Submitting...'
+      : 'Submit Guess';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -36,7 +36,7 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
         <div className="flex items-start gap-3">
           <span className="text-2xl flex-shrink-0" aria-hidden="true">💡</span>
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold text-amber-800 mb-1">Petunjuk</h3>
+            <h3 className="text-base font-semibold text-amber-800 mb-1">Clue</h3>
             <p className="text-gray-700 whitespace-pre-wrap">{item.clue}</p>
           </div>
         </div>
@@ -44,7 +44,7 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
 
       <div>
         <label htmlFor="guess-answer" className="block text-sm font-medium text-gray-700 mb-2">
-          Tebakan Anda
+          Your Guess
         </label>
         <input
           id="guess-answer"
@@ -58,7 +58,7 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
               ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
               : 'border-gray-300 hover:border-gray-400'
           } ${result ? (result.isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : ''}`}
-          placeholder="Ketik tebakan Anda..."
+          placeholder="Type your guess..."
           autoComplete="off"
           autoCapitalize="none"
           spellCheck={false}
@@ -81,11 +81,11 @@ export function GuessQuestion({ item, onSubmit, disabled, result }: GuessQuestio
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{result.isCorrect ? '🎉' : '😔'}</span>
             <h4 className={`font-semibold ${result.isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-              {result.isCorrect ? 'Benar!' : 'Salah'}
+              {result.isCorrect ? 'Correct!' : 'Incorrect'}
             </h4>
           </div>
           <p className="text-sm text-gray-600">
-            Jawaban yang benar: <strong>{result.correctAnswer}</strong>
+            Correct answer: <strong>{result.correctAnswer}</strong>
           </p>
         </div>
       )}

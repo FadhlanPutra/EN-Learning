@@ -11,9 +11,9 @@ export function Home() {
   const steps = [
     { number: 1, title: 'Form Groups', description: 'Divide students into several groups. Each group will work together to answer questions.' },
     { number: 2, title: 'Choose Level', description: 'Start with Easy (Level 1), then progress to Medium (Level 2), and finally Challenge (Level 3).' },
-    { number: 3, title: 'Take Turns', description: 'Groups take turns answering questions. Each group gets a chance to earn points.' },
-    { number: 4, title: 'Earn Points', description: 'Correct answers earn points equal to the item price. Harder questions are worth more points.' },
-    { number: 5, title: 'Bonus Challenge', description: 'For Challenge level questions, earn bonus points by explaining the word meaning or creating your own sentence.' },
+    { number: 3, title: 'Take Turns', description: 'Groups take turns answering questions. Each group gets a chance to earn money.' },
+    { number: 4, title: 'Earn Money', description: 'Correct answers earn money equal to the item price. Harder questions are worth more.' },
+    { number: 5, title: 'Bonus Challenge', description: 'For Challenge level questions, earn bonus money by explaining the word meaning or creating your own sentence.' },
   ];
 
   return (
@@ -35,7 +35,7 @@ export function Home() {
               </span>
             </h1>
             <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl">
-              A classroom game where groups buy questions like items in a shop. Answer correctly to earn points!
+              A classroom game where groups buy questions like items in a shop. Answer correctly to earn money!
             </p>
 <div className="flex flex-wrap gap-4">
               {isLoading ? (
@@ -46,7 +46,7 @@ export function Home() {
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
                 >
                   <FaPlay className="w-5 h-5" />
-                  Mulai belanja soal
+                  Start Shopping for Questions
                 </Link>
               ) : (
                 <Link
@@ -54,7 +54,7 @@ export function Home() {
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-orange-700"
                 >
                   <FaUsers className="w-5 h-5" />
-                  Masuk dengan nama kelompok
+                  Sign in with group name
                 </Link>
               )}
               {user && (
@@ -97,7 +97,7 @@ export function Home() {
                 <span className="text-2xl font-bold text-gray-400">—</span>
               </div>
             )}
-            <p className="text-gray-600 mt-1">{user ? 'Total Points Earned' : 'Masuk untuk melihat poin'}</p>
+            <p className="text-gray-600 mt-1">{user ? 'Total Balance' : 'Sign in to view balance'}</p>
           </div>
         </div>
       </section>
@@ -190,7 +190,7 @@ export function Home() {
                 className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
               >
                 <FaArrowRight className="w-5 h-5" />
-                Mulai belanja soal
+                Start Shopping for Questions
               </Link>
             ) : (
               <Link
@@ -198,7 +198,7 @@ export function Home() {
                 className="inline-flex items-center gap-2 px-8 py-3 bg-white text-orange-700 font-semibold rounded-lg hover:bg-orange-50 transition-colors"
               >
                 <FaUsers className="w-5 h-5" />
-                Masuk dengan nama kelompok
+                Sign in with group name
               </Link>
             )}
             {user && (

@@ -57,7 +57,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   const handleSubmitAnswer = useCallback(
     async (itemId: string, answer: string | string[]): Promise<Attempt> => {
-      if (!user) throw new Error('User not authenticated');
+      if (!user) throw new Error('Not authenticated');
 
       const { attempt } = await submitAnswer(user.id, itemId, answer);
       await refreshProgress();

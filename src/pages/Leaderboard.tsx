@@ -29,7 +29,7 @@ export function Leaderboard() {
       }));
       setLeaderboard(updatedData);
     } catch (err) {
-      setError('Gagal memuat peringkat.');
+      setError('Failed to load leaderboard.');
     } finally {
       setLoading(false);
     }
@@ -68,10 +68,10 @@ export function Leaderboard() {
       <div className="min-h-screen py-12 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Gagal Memuat Peringkat</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Failed to Load Leaderboard</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
           <button onClick={loadLeaderboard} className="px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
-            Coba Lagi
+            Try Again
           </button>
         </div>
       </div>
@@ -95,7 +95,7 @@ export function Leaderboard() {
                 <FaTrophy className="text-amber-500" />
                 Leaderboard
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">Top groups by total points</p>
+              <p className="text-gray-600 dark:text-gray-400">Top groups by total balance</p>
             </div>
           </div>
         </div>
@@ -110,7 +110,7 @@ export function Leaderboard() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">{user.username}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Kelompok Anda</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Your Group</p>
                 </div>
               </div>
               <div className="text-right">
@@ -119,7 +119,7 @@ export function Leaderboard() {
                 ) : (
                   <p className="text-2xl font-bold text-orange-700">{formatPrice(totalPoints)}</p>
                 )}
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Poin</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Total Balance</p>
               </div>
             </div>
           </div>
@@ -130,9 +130,9 @@ export function Leaderboard() {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16">Peringkat</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kelompok</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Poin</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-16">Rank</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Group</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Balance</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -140,7 +140,7 @@ export function Leaderboard() {
                 <tr>
                   <td colSpan={3} className="px-4 py-12 text-center text-gray-500 dark:text-gray-400">
                     <FaUsers className="w-12 h-12 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
-                    <p>Belum ada kelompok. Jadilah yang pertama bermain!</p>
+                    <p>No groups yet. Be the first to play!</p>
                   </td>
                 </tr>
               ) : (
@@ -162,7 +162,7 @@ export function Leaderboard() {
                         <div>
                           <p className={`font-medium ${entry.isCurrentUser ? 'text-orange-700 dark:text-orange-400' : 'text-gray-900 dark:text-white'}`}>
                             {entry.username}
-                            {entry.isCurrentUser && <span className="ml-2 px-2 py-0.5 text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded">Anda</span>}
+                            {entry.isCurrentUser && <span className="ml-2 px-2 py-0.5 text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded">You</span>}
                           </p>
                         </div>
                       </div>
@@ -181,7 +181,7 @@ export function Leaderboard() {
         {user && !leaderboard.some(e => e.username === user.username) && leaderboard.length > 0 && (
           <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
             <p className="text-gray-600 dark:text-gray-400">
-              Kelompok Anda akan muncul di sini setelah menjawab soal pertama.
+              Your group will appear here after answering the first question.
             </p>
           </div>
         )}

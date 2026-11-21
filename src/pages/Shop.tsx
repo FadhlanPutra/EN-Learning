@@ -28,7 +28,7 @@ export function Shop() {
       const data = await getItems();
       setItems(data);
     } catch (err) {
-      setError('Gagal memuat barang. Silakan coba lagi.');
+      setError('Failed to load items. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -87,10 +87,10 @@ export function Shop() {
       <div className="min-h-screen py-12 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Gagal Memuat Barang</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Failed to Load Items</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
           <button onClick={loadItems} className="px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
-            Coba Lagi
+            Try Again
           </button>
         </div>
       </div>
@@ -107,14 +107,14 @@ export function Shop() {
               <FaShoppingBag className="text-orange-700 dark:text-orange-400" />
               Quiz Shop
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Pilih soal untuk dijawab. Setiap soal hanya bisa dijawab sekali.</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Choose a question to answer. Each question can only be answered once.</p>
           </div>
           <Link
             to="/leaderboard"
             className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg font-medium hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
           >
             <FaTrophy className="w-5 h-5" />
-            Peringkat
+            Leaderboard
           </Link>
         </div>
 
@@ -128,7 +128,7 @@ export function Shop() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari nama soal..."
+                placeholder="Search question name..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 aria-label="Search items"
               />
@@ -146,10 +146,10 @@ export function Shop() {
                 onChange={(e) => setSelectedLevel(e.target.value as LevelFilter)}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
-                <option value="all">Semua Level</option>
-                <option value="1">Mudah (&lt; 100 rb)</option>
-                <option value="2">Sedang (100–300 rb)</option>
-                <option value="3">Tantangan (300 rb+)</option>
+                <option value="all">All Levels</option>
+                <option value="1">Easy (&lt; IDR 100,000)</option>
+                <option value="2">Medium (IDR 100,000–300,000)</option>
+                <option value="3">Challenge (IDR 300,000+)</option>
               </select>
             </div>
 
@@ -157,7 +157,7 @@ export function Shop() {
             <div className="flex items-center gap-2">
                 <label htmlFor="sort-by" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   <FaSort className="w-4 h-4 inline mr-1" />
-                  Urutkan:
+                  Sort by:
                 </label>
               <select
                 id="sort-by"
@@ -165,9 +165,9 @@ export function Shop() {
                 onChange={(e) => setSortBy(e.target.value as 'price-asc' | 'price-desc' | 'name')}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
-                <option value="price-asc">Harga: Rendah ke Tinggi</option>
-                <option value="price-desc">Harga: Tinggi ke Rendah</option>
-                <option value="name">Nama: A ke Z</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name">Name: A to Z</option>
               </select>
             </div>
           </div>
@@ -177,8 +177,8 @@ export function Shop() {
         {filteredItems.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🔍</div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Tidak ada barang ditemukan</h2>
-            <p className="text-gray-600 dark:text-gray-400">Coba ubah filter atau kata kunci pencarian.</p>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No items found</h2>
+            <p className="text-gray-600 dark:text-gray-400">Try changing the filter or search keyword.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
@@ -197,20 +197,20 @@ export function Shop() {
         <div className="mt-12 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
           <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
             <FaInfoCircle className="w-5 h-5 text-orange-700 dark:text-orange-400" />
-            Cara Kerja
+            How It Works
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-              <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium">Belum dijawab</span>
-              <span>Belum pernah dijawab</span>
+              <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium">Not answered</span>
+              <span>Not answered yet</span>
             </div>
             <div className="flex items-center gap-2 text-green-700 dark:text-green-300">
-              <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded-full text-xs font-medium">Benar</span>
-              <span>Dijawab benar, poin didapat</span>
+              <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded-full text-xs font-medium">Correct</span>
+              <span>Answered correctly, balance increases</span>
             </div>
             <div className="flex items-center gap-2 text-red-700 dark:text-red-300">
-              <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 rounded-full text-xs font-medium">Salah</span>
-              <span>Dijawab, poin 0</span>
+              <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 rounded-full text-xs font-medium">Incorrect</span>
+              <span>Answered incorrectly, balance does not increase</span>
             </div>
           </div>
         </div>

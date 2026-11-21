@@ -33,14 +33,14 @@ export function MultipleChoiceQuestion({ item, onSubmit, disabled, result }: Mul
   const choices = item.choices || [];
 
   const buttonLabel = result
-    ? 'Terkirim'
+    ? 'Submitted'
     : disabled
-      ? 'Mengirim...'
-      : 'Kirim Jawaban';
+      ? 'Submitting...'
+      : 'Submit Answer';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="space-y-2" role="radiogroup" aria-label="Pilihan jawaban">
+      <div className="space-y-2" role="radiogroup" aria-label="Answer choices">
         {choices.map((choice: Choice) => (
           <button
             key={choice.id}
@@ -78,7 +78,7 @@ export function MultipleChoiceQuestion({ item, onSubmit, disabled, result }: Mul
                 </span>
               )}
               {result && !selectedChoice && choice.text === result.correctAnswer && (
-                <span className="text-sm font-medium text-green-700">✓ Benar</span>
+                <span className="text-sm font-medium text-green-700">✓ Correct</span>
               )}
             </div>
           </button>
@@ -98,11 +98,11 @@ export function MultipleChoiceQuestion({ item, onSubmit, disabled, result }: Mul
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{result.isCorrect ? '🎉' : '😔'}</span>
             <h4 className={`font-semibold ${result.isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-              {result.isCorrect ? 'Benar!' : 'Salah'}
+              {result.isCorrect ? 'Correct!' : 'Incorrect'}
             </h4>
           </div>
           <p className="text-sm text-gray-600">
-            Jawaban yang benar: <strong>{result.correctAnswer}</strong>
+            Correct answer: <strong>{result.correctAnswer}</strong>
           </p>
         </div>
       )}

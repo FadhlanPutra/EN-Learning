@@ -26,7 +26,7 @@ export function History() {
       const data = await getHistory(user.id);
       setAttempts(data);
     } catch (err) {
-      setError('Gagal memuat riwayat.');
+      setError('Failed to load history.');
     } finally {
       setLoading(false);
     }
@@ -56,10 +56,10 @@ export function History() {
       <div className="min-h-screen py-12 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Gagal Memuat Riwayat</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load History</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button onClick={loadHistory} className="px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
-            Coba Lagi
+            Try Again
           </button>
         </div>
       </div>
@@ -74,10 +74,10 @@ export function History() {
   };
 
   const typeLabels: Record<string, string> = {
-    multiple_choice: 'Pilihan ganda',
-    short_answer: 'Isian singkat',
-    word_arrange: 'Susun kata',
-    guess: 'Tebak',
+    multiple_choice: 'Multiple choice',
+    short_answer: 'Short answer',
+    word_arrange: 'Word arrange',
+    guess: 'Guess',
   };
 
   return (
@@ -93,8 +93,8 @@ export function History() {
               <FaArrowLeft className="w-6 h-6" />
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Riwayat</h1>
-              <p className="text-gray-600">Soal yang sudah dijawab</p>
+              <h1 className="text-3xl font-bold text-gray-900">History</h1>
+              <p className="text-gray-600">Answered questions</p>
             </div>
           </div>
 
@@ -106,7 +106,7 @@ export function History() {
                 ) : (
                   <p className="text-2xl font-bold text-orange-700">{formatPrice(totalPoints)}</p>
                 )}
-                <p className="text-sm text-gray-600">Total Poin</p>
+                <p className="text-sm text-gray-600">Total Balance</p>
               </div>
               <div className="w-px h-8 bg-gray-200 mx-2" />
               <div className="text-center">
@@ -124,7 +124,7 @@ export function History() {
                 ) : (
                   <p className="text-2xl font-bold text-blue-600">{attempts.length}</p>
                 )}
-                <p className="text-sm text-gray-600">Soal</p>
+                <p className="text-sm text-gray-600">Questions</p>
               </div>
             </div>
           </div>
@@ -134,10 +134,10 @@ export function History() {
         {attempts.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">📭</div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Belum ada riwayat</h2>
-            <p className="text-gray-600 mb-6">Mulai menjawab soal untuk melihat riwayat di sini.</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">No history yet</h2>
+            <p className="text-gray-600 mb-6">Start answering questions to see your history here.</p>
             <Link to="/shop" className="inline-flex items-center gap-2 px-6 py-3 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors">
-              Ke Toko
+              Go to Shop
             </Link>
           </div>
         ) : (
@@ -161,8 +161,8 @@ export function History() {
                           {isCorrect ? <FaCheckCircle className="text-green-700 w-6 h-6" /> : <FaTimes className="text-red-600 w-6 h-6" />}
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900">{attempt.item?.name || `Soal #${attempt.itemId}`}</p>
-                          <p className="text-sm text-gray-500">{typeLabels[attempt.item?.type || ''] || 'Soal'}</p>
+                          <p className="font-semibold text-gray-900">{attempt.item?.name || `Question #${attempt.itemId}`}</p>
+                          <p className="text-sm text-gray-500">{typeLabels[attempt.item?.type || ''] || 'Question'}</p>
                         </div>
                       </div>
 
@@ -177,17 +177,17 @@ export function History() {
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500">Tipe</p>
+                          <p className="text-gray-500">Type</p>
                           <p className="font-medium text-gray-900 flex items-center gap-1">
                             <span>{typeIcons[attempt.item?.type || ''] || '📝'}</span>
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500">Poin</p>
+                          <p className="text-gray-500">Reward</p>
                           <p className="font-bold text-orange-700">{formatPrice(attempt.pointsEarned)}</p>
                         </div>
                         <div>
-                          <p className="text-gray-500">Tanggal</p>
+                          <p className="text-gray-500">Date</p>
                           <p className="font-medium text-gray-900">{formatDate(attempt.createdAt)}</p>
                         </div>
                       </div>
@@ -196,7 +196,7 @@ export function History() {
                     {/* Correct answer display */}
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <p className="text-sm text-gray-600">
-                        <strong>Jawaban yang benar:</strong> {attempt.correctAnswer}
+                        <strong>Correct answer:</strong> {attempt.correctAnswer}
                       </p>
                     </div>
                   </div>

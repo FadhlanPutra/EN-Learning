@@ -21,10 +21,10 @@ export function Account() {
     setLoading(true);
     try {
       await logout();
-      showToast('Berhasil keluar.', 'success');
+      showToast('Successfully logged out.', 'success');
       navigate('/', { replace: true });
     } catch (err) {
-      showToast('Gagal keluar.', 'error');
+      showToast('Failed to log out.', 'error');
     } finally {
       setLoading(false);
     }
@@ -38,10 +38,10 @@ export function Account() {
     try {
       const { enterName } = await import('../services/authService');
       await enterName(newName.trim());
-      showToast('Nama kelompok diperbarui.', 'success');
+      showToast('Group name updated.', 'success');
       setEditingName(false);
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Gagal memperbarui nama.', 'error');
+      showToast(err instanceof Error ? err.message : 'Failed to update name.', 'error');
     } finally {
       setLoading(false);
     }
@@ -63,8 +63,8 @@ export function Account() {
               <FaArrowLeft className="w-6 h-6" />
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Akun</h1>
-              <p className="text-gray-600">Kelola profil dan pengaturan</p>
+              <h1 className="text-3xl font-bold text-gray-900">Account</h1>
+              <p className="text-gray-600">Manage profile and settings</p>
             </div>
           </div>
         </div>
@@ -92,13 +92,13 @@ export function Account() {
                       disabled={loading}
                       className="px-3 py-2 bg-white hover:bg-orange-50 text-orange-700 rounded-lg transition-colors text-sm"
                     >
-                      Simpan
+                      Save
                     </button>
                     <button
                       onClick={() => { setEditingName(false); setNewName(user.username); }}
                       className="px-3 py-2 bg-white hover:bg-orange-50 text-orange-700 rounded-lg transition-colors text-sm"
                     >
-                      Batal
+                      Cancel
                     </button>
                   </div>
                 ) : (
@@ -109,7 +109,7 @@ export function Account() {
                       className="flex items-center gap-1 text-white/90 hover:text-white text-sm mt-1"
                     >
                       <FaEdit className="w-4 h-4" />
-                      Ganti nama
+                      Change name
                     </button>
                   </>
                 )}
@@ -122,21 +122,21 @@ export function Account() {
               <StatCard
                 icon={<FaTrophy className="w-6 h-6" />}
                 value={formatPrice(totalPoints)}
-                label="Total Poin"
+                label="Total Balance"
                 color="orange"
                 loading={progressLoading}
               />
               <StatCard
                 icon={<FaHistory className="w-6 h-6" />}
                 value={`${accuracy}%`}
-                label="Akurasi"
+                label="Accuracy"
                 color="green"
                 loading={progressLoading}
               />
               <StatCard
                 icon={<FaHistory className="w-6 h-6" />}
                 value={totalAnswered}
-                label="Soal Dijawab"
+                label="Questions Answered"
                 color="blue"
                 loading={progressLoading}
               />
@@ -144,7 +144,7 @@ export function Account() {
 
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-sm text-gray-600">
-                Benar: {correctAnswers} dari {totalAnswered} soal
+                Correct: {correctAnswers} of {totalAnswered} questions
               </p>
             </div>
           </div>
@@ -155,15 +155,15 @@ export function Account() {
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
               <FaUser className="text-orange-700" />
-              Pengaturan
+              Settings
             </h2>
           </div>
 
           <div className="p-6">
             <div className="pt-6 border-t border-gray-200">
-              <h3 className="font-medium text-gray-900 mb-4">Zona Bahaya</h3>
+              <h3 className="font-medium text-gray-900 mb-4">Danger Zone</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Keluar akan mengakhiri sesi di perangkat ini. Poin kelompok tetap tersimpan dan bisa diakses lagi dengan memasukkan nama yang sama.
+                Logging out will end the session on this device. The group balance remains saved and can be accessed again by entering the same name.
               </p>
               <button
                 onClick={handleLogout}
@@ -171,7 +171,7 @@ export function Account() {
                 className="w-full py-3 px-4 border border-red-300 text-red-600 rounded-lg font-medium hover:bg-red-50 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center gap-2"
               >
                 <FaSignOutAlt className="w-5 h-5" />
-                {loading ? 'Keluar...' : 'Keluar / Ganti Kelompok'}
+                {loading ? 'Logging out...' : 'Log Out / Switch Group'}
               </button>
             </div>
           </div>
@@ -184,8 +184,8 @@ export function Account() {
             className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow"
           >
             <FaHistory className="w-10 h-10 text-blue-600 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900">Riwayat</h3>
-            <p className="text-sm text-gray-600 mt-1">Lihat semua soal yang dijawab</p>
+            <h3 className="font-semibold text-gray-900">History</h3>
+            <p className="text-sm text-gray-600 mt-1">View all answered questions</p>
           </Link>
 
           <Link
@@ -193,8 +193,8 @@ export function Account() {
             className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:shadow-md transition-shadow"
           >
             <FaTrophy className="w-10 h-10 text-amber-600 mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-900">Peringkat</h3>
-            <p className="text-sm text-gray-600 mt-1">Cek posisi kelompok Anda</p>
+            <h3 className="font-semibold text-gray-900">Leaderboard</h3>
+            <p className="text-sm text-gray-600 mt-1">Check your group's position</p>
           </Link>
         </div>
       </div>

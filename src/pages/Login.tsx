@@ -35,11 +35,11 @@ export function Login() {
 
     const trimmedName = name.trim();
     if (!trimmedName) {
-      setError('Nama kelompok tidak boleh kosong.');
+      setError('Group name cannot be empty.');
       return;
     }
     if (trimmedName.length < 2 || trimmedName.length > 30) {
-      setError('Nama kelompok harus 2-30 karakter.');
+      setError('Group name must be 2-30 characters.');
       return;
     }
 
@@ -50,7 +50,7 @@ export function Login() {
       showToast(`Selamat datang, ${trimmedName}!`, 'success');
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Gagal masuk.');
+      setError(err instanceof Error ? err.message : 'Failed to sign in.');
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ export function Login() {
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
             >
               <FaArrowLeft className="w-4 h-4" />
-              Kembali ke Home
+              Back to Home
             </Link>
           </div>
         </div>
@@ -90,9 +90,9 @@ export function Login() {
           {/* Card */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">Masuk / Daftar</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Sign In / Register</h1>
               <p className="text-gray-600 mt-2">
-                Ketik nama kelompok untuk mulai bermain
+                Enter your group name to start playing
               </p>
             </div>
 
@@ -100,7 +100,7 @@ export function Login() {
               {/* Group Name */}
               <div>
                 <label htmlFor="group-name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Nama Kelompok
+                  Group Name
                 </label>
                 <div className="relative">
                   <FaUsers className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" aria-hidden="true" />
@@ -112,7 +112,7 @@ export function Login() {
                     className={`w-full pl-10 pr-4 py-3 border rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors ${
                       error ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Contoh: Kelompok A"
+                    placeholder="E.g.: Group A"
                     autoComplete="off"
                     disabled={loading}
                     maxLength={30}
@@ -137,11 +137,11 @@ export function Login() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
-                    Memproses...
+                    Processing...
                   </>
                 ) : (
                   <>
-                    Masuk
+                    Sign In
                     <FaArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -149,7 +149,7 @@ export function Login() {
             </form>
 
             <div className="mt-6 text-center text-sm text-gray-500">
-              <p>Nama kelompok boleh kembar. Poin tersimpan per perangkat.</p>
+              <p>Group names can be duplicated. Balance is stored per device.</p>
             </div>
           </div>
 

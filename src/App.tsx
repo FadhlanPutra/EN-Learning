@@ -32,7 +32,7 @@ function SessionExpiryWatcher() {
 
   useEffect(() => {
     if (sessionExpired) {
-      showToast('Sesi berakhir, masukkan nama kelompok lagi.', 'warning');
+      showToast('Session expired, enter your group name again.', 'warning');
       clearSessionExpired();
       navigate('/login', { replace: true });
     }

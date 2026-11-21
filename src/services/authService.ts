@@ -8,7 +8,7 @@ function mapProfileToUser(profile: { id: string; username: string }): User {
 export async function enterName(name: string): Promise<User> {
   const trimmedName = name.trim();
   if (trimmedName.length < 2 || trimmedName.length > 30) {
-    throw new Error('Nama kelompok harus 2-30 karakter.');
+    throw new Error('Group name must be 2-30 characters.');
   }
 
   const { data: { session } } = await supabase.auth.getSession();
@@ -18,7 +18,7 @@ export async function enterName(name: string): Promise<User> {
       options: { data: { username: trimmedName } },
     });
     if (error) throw new Error(translateError(error.message));
-    if (!data.user) throw new Error('Gagal masuk.');
+    if (!data.user) throw new Error('Sign in failed.');
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -27,7 +27,10 @@ export async function enterName(name: string): Promise<User> {
       .maybeSingle();
 
     if (profileError) throw new Error(translateError(profileError.message));
-    if (!profile) throw new Error('Profil tidak ditemukan.');
+    if (!profile) {
+      await supabase.auth.signOut();
+      return enterName(trimmedName);
+    }
 
     return mapProfileToUser(profile);
   }
@@ -46,7 +49,7 @@ export async function enterName(name: string): Promise<User> {
     .maybeSingle();
 
   if (profileError) throw new Error(translateError(profileError.message));
-  if (!profile) throw new Error('Profil tidak ditemukan.');
+  if (!profile) throw new Error('Profile not found.');
 
   return mapProfileToUser(profile);
 }
@@ -61,7 +64,10 @@ export async function getCurrentUser(): Promise<User | null> {
     .eq('id', session.user.id)
     .maybeSingle();
 
-  if (error || !profile) return null;
+  if (error || !profile) {
+    if (!error) await supabase.auth.signOut();
+    return null;
+  }
   return mapProfileToUser(profile);
 }
 
@@ -98,11 +104,11 @@ export function subscribeAuth(callback: (user: User | null) => void): () => void
 
 function translateError(message: string): string {
   const errorMap: Record<string, string> = {
-    not_authenticated: 'Masukkan nama kelompok dulu.',
-    already_answered: 'Soal ini sudah dijawab dan tidak bisa diulang.',
-    invalid_choice: 'Pilihan jawaban tidak valid.',
-    empty_answer: 'Jawaban tidak boleh kosong.',
-    item_not_found: 'Barang tidak ditemukan.',
+    not_authenticated: 'Enter your group name first.',
+    already_answered: 'This question has already been answered and cannot be repeated.',
+    invalid_choice: 'Invalid choice.',
+    empty_answer: 'Answer cannot be empty.',
+    item_not_found: 'Item not found.',
   };
 
   for (const [key, translated] of Object.entries(errorMap)) {

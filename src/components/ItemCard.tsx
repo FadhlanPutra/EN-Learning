@@ -22,19 +22,19 @@ export function ItemCard({ item, attempt, statusLoading }: ItemCardProps) {
   };
 
   const categoryLabels: Record<string, string> = {
-    vocabulary: 'Kosa kata',
-    grammar: 'Tata bahasa',
-    arrange: 'Menyusun',
-    translate: 'Terjemahan',
-    complete: 'Pelengkap',
-    guess: 'Menebak',
+    vocabulary: 'Vocabulary',
+    grammar: 'Grammar',
+    arrange: 'Arrange',
+    translate: 'Translation',
+    complete: 'Complete',
+    guess: 'Guess',
   };
 
   const getStatusBadge = () => {
     if (!isAnswered) {
       return (
         <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-full">
-          Belum dijawab
+          Not answered
         </span>
       );
     }
@@ -44,7 +44,7 @@ export function ItemCard({ item, attempt, statusLoading }: ItemCardProps) {
           ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
           : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
       }`}>
-        {isCorrect ? '✓ Benar' : '✗ Salah'}
+        {isCorrect ? '✓ Correct' : '✗ Incorrect'}
       </span>
     );
   };
